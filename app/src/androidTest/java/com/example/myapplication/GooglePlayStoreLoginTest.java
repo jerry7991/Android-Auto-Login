@@ -17,6 +17,7 @@ import java.io.IOException;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 
 import java.io.File;
@@ -80,14 +81,8 @@ public class GooglePlayStoreLoginTest {
     @Test
     @SuppressWarnings("unchecked")
     public void testLogin() throws Exception {
-        String currentState = "Activity Start";
-        long startTime = System.currentTimeMillis();
-//        startActivity("com.android.vending");
-        printLogWithTime(currentState, startTime);
         out("Going to set waitForIdleTimeout to 0");
         try {
-            startTime = System.currentTimeMillis();
-            currentState = "signInButton";
             String username ="faltuadmihu@gmail.com";
             String password ="FaltuAdmi";
 
@@ -104,10 +99,7 @@ public class GooglePlayStoreLoginTest {
                 throw new UiObjectNotFoundException(SIGN_IN_BUTTON_MISSING);
             }
 
-            printLogWithTime(currentState, startTime);
 
-            startTime = System.currentTimeMillis();
-            currentState = "usernameInput";
             UiObject usernameInputField = osVersion < 5 ? findElement("com.google.android.gsf.login:id/username_edit", DELAYED_FIND_ELEMENT_RETRIES, ID) : findElement("android.widget.EditText", DELAYED_FIND_ELEMENT_RETRIES, CLASS_NAME);
             if (uiObjectNotEmpty(usernameInputField)) {
 //                usernameInputField.click();
@@ -116,29 +108,18 @@ public class GooglePlayStoreLoginTest {
                 out(" failed to find username input field");
                 throw new UiObjectNotFoundException(LOGIN_FAILED);
             }
-            printLogWithTime(currentState, startTime);
 
-            startTime = System.currentTimeMillis();
-            currentState = "identifierNext";
+
             UiObject nextButton = uiObjectNotEmpty(findElement("(?i)next", FIND_ELEMENT_RETRIES, TEXT)) ? findElement("(?i)next", FIND_ELEMENT_RETRIES, TEXT) : findElement("identifierNext", FIND_ELEMENT_RETRIES, ID);
             if (uiObjectNotEmpty(nextButton)) {
                 nextButton.click();
             }
 
-            printLogWithTime(currentState, startTime);
-
-            //can't use resourceId or text to find, since playstore on os_version 5.0 has webview
-            startTime = System.currentTimeMillis();
-            currentState = "passwordEdit";
             UiObject passwordInputField = osVersion < 5 ? findElement("com.google.android.gsf.login:id/password_edit", FIND_ELEMENT_RETRIES, ID) : findElement("android.widget.EditText", DELAYED_FIND_ELEMENT_RETRIES, CLASS_NAME);
 
             if (uiObjectNotEmpty(passwordInputField)) {
-                // Doing multiple clicks so that input is focused before adding text, since focusing takes time.
-//                for (int i = 0; i < 5; i++) {
-//                    passwordInputField.click();
-//                }
+                passwordInputField.click();
                 passwordInputField.setText(password);
-
             } else {
                 // Check for incorrect email
                 UiObject isEmailIncorrect = findElement("Couldn\'t find your Google Account", FIND_ELEMENT_RETRIES, TEXT);
@@ -148,10 +129,7 @@ public class GooglePlayStoreLoginTest {
 
                 throw new UiObjectNotFoundException(LOGIN_FAILED);
             }
-//            printLogWithTime(currentState, startTime);
 
-//            startTime = System.currentTimeMillis();
-            currentState = "passwordNext";
             if (osVersion < 5) {
                 nextButton = findElement("com.google.android.gsf.login:id/next_button", FIND_ELEMENT_RETRIES, ID);
             } else {
@@ -163,10 +141,7 @@ public class GooglePlayStoreLoginTest {
             } else {
                 throw new UiObjectNotFoundException(LOGIN_FAILED);
             }
-//            printLogWithTime(currentState, startTime);
 
-//            startTime = System.currentTimeMillis();
-            currentState = "I agree";
             UiObject termsOfService = null;
             UiObject isAcceptButton = null;
 
@@ -237,23 +212,17 @@ public class GooglePlayStoreLoginTest {
                 }
                 throw new UiObjectNotFoundException(LOGIN_FAILED);
             }
-//            printLogWithTime(currentState, startTime);
         } catch (Exception e) {
-//            printLogWithTime(currentState, startTime);
             out(e.getMessage()+0);
             throw e;
         } finally {
-//            startTime = System.currentTimeMillis();
-            currentState = "final";
-            mDevice.takeScreenshot(new File("/sdcard/login_status.png"));
             mDevice.pressHome();
-            printLogWithTime(currentState, startTime);
         }
     }
 
     private UiObject findElement(String identifier, int timeout, String findBy) throws InterruptedException {
         UiObject element = null;
-        for (int i = 0; i < timeout; i++) {
+        for (int i = 0; i < timeout && !uiObjectNotEmpty(element); i++) {
             out("Finding element " + identifier + " i: " + i);
             if (findBy.equals(TEXT)) {
                 out("finding element by text with : " + identifier+ 0);
