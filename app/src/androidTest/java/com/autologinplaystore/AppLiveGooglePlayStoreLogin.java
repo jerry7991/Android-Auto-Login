@@ -1,33 +1,17 @@
-package com.example.myapplication;
-
-import androidx.test.ext.junit.runners.AndroidJUnit4;
-import androidx.test.uiautomator.UiObject;
-import androidx.test.uiautomator.UiObjectNotFoundException;
-import androidx.test.uiautomator.UiSelector;
-
-
-import androidx.test.platform.app.InstrumentationRegistry;
-import androidx.test.uiautomator.By;
-import androidx.test.uiautomator.UiDevice;
-import androidx.test.uiautomator.Until;
-
-
-import java.io.IOException;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.experimental.categories.Category;
-import org.junit.runner.RunWith;
-
-import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+package com.autologinplaystore;
 
 import static java.lang.Thread.sleep;
 
 import android.util.Log;
+
+import androidx.test.ext.junit.runners.AndroidJUnit4;
+import androidx.test.platform.app.InstrumentationRegistry;
+import androidx.test.uiautomator.By;
+import androidx.test.uiautomator.UiDevice;
+import androidx.test.uiautomator.UiObject;
+import androidx.test.uiautomator.UiObjectNotFoundException;
+import androidx.test.uiautomator.UiSelector;
+import androidx.test.uiautomator.Until;
 
 import com.uiautomation.AccountVerificationException;
 import com.uiautomation.CaptchaFoundException;
@@ -35,9 +19,16 @@ import com.uiautomation.IncorrectCredException;
 import com.uiautomation.PasswordChangeException;
 import com.uiautomation.Requires2FAException;
 
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.junit.runner.RunWith;
+
+import java.io.IOException;
+import java.util.Arrays;
+
 @RunWith(AndroidJUnit4.class)
-public class GooglePlayStoreLoginTest {
-    private UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
+public class AppLiveGooglePlayStoreLogin {
     private final String TEXT = "text";
     private final String ID = "id";
     private final String CLASS_NAME = "className";
@@ -55,8 +46,9 @@ public class GooglePlayStoreLoginTest {
     private final String REQUIRES2FA = "Account requires 2FA";
     private final String PASSWORD_CHANGE_PROMPT = "Password change encountered";
     private final String PASSWORD_PROMPT_AGAIN = "Asking for password";
+    long startTime;
+    private UiDevice mDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation());
 
-    long startTime ;
     @Before
     public void setUiAutomationEnvironment() {
         ProcessBuilder processBuilder = new ProcessBuilder(Arrays.asList("adb shell settings put global window_animation_scale 0.0",
@@ -65,7 +57,7 @@ public class GooglePlayStoreLoginTest {
         try {
             Log.d("setUiAutomationEnvironment", "starting adb environment");
             startTime = System.currentTimeMillis();
-            Log.d("starting at the time ", startTime+"");
+            Log.d("starting at the time ", startTime + "");
             processBuilder.start();
         } catch (IOException e) {
             e.printStackTrace();
@@ -74,8 +66,8 @@ public class GooglePlayStoreLoginTest {
 
     @After
     public void resetUiAutomationEnvironment() {
-        startTime = System.currentTimeMillis()-startTime;
-        Log.d("Time taken ", startTime+"");
+        startTime = System.currentTimeMillis() - startTime;
+        Log.d("Time taken ", startTime + "");
     }
 
     @Test
@@ -83,8 +75,8 @@ public class GooglePlayStoreLoginTest {
     public void testLogin() throws Exception {
         out("Going to set waitForIdleTimeout to 0");
         try {
-            String username ="faltuadmihu@gmail.com";
-            String password ="FaltuAdmi";
+            String username = "faltuadmihu@gmail.com";
+            String password = "FaltuAdmi";
 
 
             float osVersion = 11;
@@ -93,7 +85,7 @@ public class GooglePlayStoreLoginTest {
             if (uiObjectNotEmpty(signInButton)) {
                 out("sign in button found...");
                 boolean signButtonClicked = signInButton.click();
-                out("signButtonClicked  status : " + signButtonClicked+0);
+                out("signButtonClicked  status : " + signButtonClicked + 0);
             } else {
                 out("sign in button was missing...");
                 throw new UiObjectNotFoundException(SIGN_IN_BUTTON_MISSING);
@@ -213,7 +205,7 @@ public class GooglePlayStoreLoginTest {
                 throw new UiObjectNotFoundException(LOGIN_FAILED);
             }
         } catch (Exception e) {
-            out(e.getMessage()+0);
+            out(e.getMessage() + 0);
             throw e;
         } finally {
             mDevice.pressHome();
@@ -225,7 +217,7 @@ public class GooglePlayStoreLoginTest {
         for (int i = 0; i < timeout && !uiObjectNotEmpty(element); i++) {
             out("Finding element " + identifier + " i: " + i);
             if (findBy.equals(TEXT)) {
-                out("finding element by text with : " + identifier+ 0);
+                out("finding element by text with : " + identifier + 0);
                 element = new UiObject(new UiSelector().textMatches(identifier));
                 out("Element : " + identifier + " element : " + element.toString());
                 if (element == null) {
@@ -251,7 +243,7 @@ public class GooglePlayStoreLoginTest {
     }
 
     private void printLogWithTime(String method, long startTime) {
-        out(method + " took " + (System.currentTimeMillis() - startTime) + " ms"+ 0);
+        out(method + " took " + (System.currentTimeMillis() - startTime) + " ms" + 0);
     }
 
     protected void startActivity(String package_name) throws IOException {
