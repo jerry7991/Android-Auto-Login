@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.PriorityQueue;
 
 @RunWith(AndroidJUnit4.class)
 public class AppLiveGooglePlayStoreLoginOp {
@@ -71,8 +72,6 @@ public class AppLiveGooglePlayStoreLoginOp {
         try {
             String username = "faltuadmihu@gmail.com";
             String password = "FaltuAdmi";
-
-
             float osVersion = 11;
             UiObject2 signInButton = findElement("Sign in", TEXT, SORT_TIMEOUT);
 
@@ -209,3 +208,7 @@ public class AppLiveGooglePlayStoreLoginOp {
         Log.d(" Devices logs :: ", str);
     }
 }
+/*
+* Command
+* adb -s adb-RZ8M91JT34M-osg5yz._adb-tls-connect._tcp. shell am instrument -w -r -e debug false -e class com.autologinplaystore.AppLiveGooglePlayStoreLoginOp com.autologinplaystore.test/androidx.test.runner.AndroidJUnitRunner
+* */
